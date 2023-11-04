@@ -119,12 +119,12 @@ p <- ggplot(data_long, aes(x = reorder_within(Schooling_type, Mean_Score, Subjec
     y = "Mean Score per Subject",
     fill = "School Type",
     title = "Performance Differences per School Type (2016-2020)",
-    caption = "Source: National Examinatios, Ministry of Education Dominican Republic"
+    caption = "Source: National Examinations, Ministry of Education Dominican Republic"
   ) +
   theme(legend.title = element_text(),
         axis.text.y = element_blank()) +
   scale_fill_manual(values = custom_colors, breaks = fill_order) +
-  facet_wrap(~Subject, ncol = 1, scales = "free", labeller = labeller(Schooling_type = customize_labels_schooling, Subject = customize_labels_subject)) +
+  facet_wrap(~Subject, ncol = 2, scales = "free", labeller = labeller(Schooling_type = customize_labels_schooling, Subject = customize_labels_subject)) +
   coord_flip()
 
 print(p)
