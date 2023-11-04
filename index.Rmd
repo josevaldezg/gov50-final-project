@@ -33,3 +33,101 @@ My outcome variables of interest are representing the mean scores in four academ
 
 Support for my hypothesis would be evident if schools in metropolitan areas demonstrate higher mean scores than rural schools. Also, my theory would be supported if there are significant differences across specific school types, or funding source (e.g., Academic or Private), as suggested by my theory. However, my hypothesis would be refuted if the data indicates similar performance across regionals and school types, including no significant difference in performance of public and private schools. Another outcome that would refute my theory is that public schools perform better than private schools. Coding the mean scores (outcome variables) across explanatory variables will allow me to test my hypothesis and draw meaningful conclusions.
 
+## First Data Visualization
+
+```{r, echo = FALSE}
+library(dplyr)
+library(knitr)
+
+HS_DR_Education <- DR_education %>%
+  filter(!grepl("basica", `Nivel/Modalidad`, ignore.case = TRUE))
+
+HS_DR_Education <- HS_DR_Education %>%
+  mutate(Español = as.numeric(gsub("[^0-9.]", "", Español)),
+         Matemáticas = as.numeric(gsub("[^0-9.]", "", Matemáticas)),
+         Sociales = as.numeric(gsub("[^0-9.]", "", Sociales)),
+         Naturales = as.numeric(gsub("[^0-9.]", "", Naturales)))
+
+HS_DR_Education[is.na(HS_DR_Education)] <- 0
+
+results_means <- HS_DR_Education %>%
+  group_by(`Nivel/Modalidad`) %>%
+  summarize(mean_espanol = mean(Español, na.rm = TRUE),
+            mean_matematicas = mean(Matemáticas, na.rm = TRUE),
+            mean_sociales = mean(Sociales, na.rm = TRUE),
+            mean_naturales = mean(Naturales, na.rm = TRUE))
+results_means <- results_means %>%
+  filter(`Nivel/Modalidad` %in% c("ADULTOS FORMAL", "ARTES", "MODALIDAD GENERAL", "TECNICO PROFESIONAL", "ACADEMICOS"))
+
+kable(results_means, caption = "Table of Results Means")
+
+```
+
+```{r, echo = FALSE}
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+library(forcats)
+library(tidytext)
+
+# Your data
+data <- tribble(
+  ~Schooling_type, ~Spanish, ~Mathematics, ~Social_Sciences, ~Natural_Sciences,
+  "ACADEMIC", 19.902198, 16.816484, 18.340049, 17.725397,
+  "ADULTS SCHOOL", 9.828218, 9.661577, 9.290876, 9.042828,
+  "ARTS", 16.453333, 14.667868, 15.084307, 14.985406,
+  "GENERAL EDUCATION", 15.855032, 15.471510, 15.611412, 15.590785,
+  "TECHNICAL-PROFESSIONAL", 18.298454, 17.115917, 16.889827, 17.007560
+)
+
+# Reshape the data
+data_long <- data %>%
+  pivot_longer(cols = -Schooling_type, names_to = "Subject", values_to = "Mean_Score")
+
+# Create a custom color palette
+custom_colors <- c("#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd")
+
+fill_order <- c("ACADEMIC", "TECHNICAL-PROFESSIONAL", "GENERAL EDUCATION", "ARTS", "ADULTS SCHOOL")
+
+
+# Create a function to customize facet labels
+customize_labels_schooling <- function(value) {
+  value <- as.character(value)
+  custom_labels <- c("ACADEMIC" = "Academic",
+                     "ADULTS SCHOOL" = "Adults School",
+                     "ARTS" = "Arts",
+                     "GENERAL EDUCATION" = "General Education",
+                     "TECHNICAL-PROFESSIONAL" = "Technical-Professional")
+  return(custom_labels[value])
+}
+
+customize_labels_subject <- function(value) {
+  value <- as.character(value)
+  custom_labels <- c("Spanish" = "Spanish",
+                     "Mathematics" = "Math",
+                     "Social_Sciences" = "Social Sciences",
+                     "Natural_Sciences" = "Natural Sciences")
+  return(custom_labels[value])
+}
+
+# Create the plot with customized facet labels and mean score values
+p <- ggplot(data_long, aes(x = reorder_within(Schooling_type, Mean_Score, Subject), y = Mean_Score, fill = Schooling_type, label = sprintf("%.2f", Mean_Score))) +
+  geom_bar(stat = "identity") +
+  geom_text(size = 2, position = position_stack(vjust = 0.5), color = "white") +  # Add Mean_Score as text
+  labs(
+    x = "Schooling Type's Mean Score",
+    y = "Mean Score per Subject",
+    fill = "School Type",
+    title = "Performance Differences per School Type (2016-2020)",
+    caption = "Source: National Examinatios, Ministry of Education Dominican Republic"
+  ) +
+  theme(legend.title = element_text(),
+        axis.text.y = element_blank()) +
+  scale_fill_manual(values = custom_colors, breaks = fill_order) +
+  facet_wrap(~Subject, ncol = 1, scales = "free", labeller = labeller(Schooling_type = customize_labels_schooling, Subject = customize_labels_subject)) +
+  coord_flip()
+
+print(p)
+
+```
+

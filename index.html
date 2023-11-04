@@ -115,7 +115,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   <!--/radix_placeholder_rmarkdown_metadata-->
   
   <script type="text/json" id="radix-resource-manifest">
-  {"type":"character","attributes":{},"value":["index_files/anchor-4.2.2/anchor.min.js","index_files/bowser-1.9.3/bowser.min.js","index_files/distill-2.2.21/template.v2.js","index_files/header-attrs-2.17/header-attrs.js","index_files/header-attrs-2.24/header-attrs.js","index_files/jquery-3.6.0/jquery-3.6.0.js","index_files/jquery-3.6.0/jquery-3.6.0.min.js","index_files/jquery-3.6.0/jquery-3.6.0.min.map","index_files/popper-2.6.0/popper.min.js","index_files/tippy-6.2.7/tippy-bundle.umd.min.js","index_files/tippy-6.2.7/tippy-light-border.css","index_files/tippy-6.2.7/tippy.css","index_files/tippy-6.2.7/tippy.umd.min.js","index_files/webcomponents-2.0.0/webcomponents.js","Results_PN_Data.csv"]}
+  {"type":"character","attributes":{},"value":["index_files/anchor-4.2.2/anchor.min.js","index_files/bowser-1.9.3/bowser.min.js","index_files/distill-2.2.21/template.v2.js","index_files/figure-html5/unnamed-chunk-3-1.png","index_files/header-attrs-2.17/header-attrs.js","index_files/header-attrs-2.24/header-attrs.js","index_files/jquery-3.6.0/jquery-3.6.0.js","index_files/jquery-3.6.0/jquery-3.6.0.min.js","index_files/jquery-3.6.0/jquery-3.6.0.min.map","index_files/popper-2.6.0/popper.min.js","index_files/tippy-6.2.7/tippy-bundle.umd.min.js","index_files/tippy-6.2.7/tippy-light-border.css","index_files/tippy-6.2.7/tippy.css","index_files/tippy-6.2.7/tippy.umd.min.js","index_files/webcomponents-2.0.0/webcomponents.js","Results_PN_Data.csv"]}
   </script>
   <!--radix_placeholder_navigation_in_header-->
   <!--/radix_placeholder_navigation_in_header-->
@@ -1534,6 +1534,68 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <p>My sample is in Spanish and includes national examination results from 2016 to 2020. My unit of analysis are the school’s mean results, with 46,283 observations. My first explanatory variable of interest is “Regional” which is measured by assigning every school to 18 different regionals across the country. This variable is coded by assigning each school to a specific region (e.g., School X = 10). Further investigation is needed to classify regions as metropolitan or rural. The second variable, “Nivel/Modalidad” (level/modality), is coded by assigning every school to the type of schooling. These are: General, Academic, Professional Technical, or Arts (e.g., School X = Arts). I plan to code a third variable differentiating between public and private schools, depending on data availability (e.g., School X = Public).</p>
 <p>My outcome variables of interest are representing the mean scores in four academic subjects: Español (Spanish), Matemáticas (Math), Sociales (Social Sciences), and Naturales (Natural Sciences). I want to highlight that every academic subject represents a different variable, for a total of four outcome variables. These variables measures scores on a 30% scale, and summarizes the mean scores of all students in a school. For instance, the mean scores of students in School X are coded for Spanish (e.g., Spanish = 16.53).</p>
 <p>Support for my hypothesis would be evident if schools in metropolitan areas demonstrate higher mean scores than rural schools. Also, my theory would be supported if there are significant differences across specific school types, or funding source (e.g., Academic or Private), as suggested by my theory. However, my hypothesis would be refuted if the data indicates similar performance across regionals and school types, including no significant difference in performance of public and private schools. Another outcome that would refute my theory is that public schools perform better than private schools. Coding the mean scores (outcome variables) across explanatory variables will allow me to test my hypothesis and draw meaningful conclusions.</p>
+<h2 id="first-data-visualization">First Data Visualization</h2>
+<div class="layout-chunk" data-layout="l-body">
+<table>
+<caption><span id="tab:unnamed-chunk-2">Table 1: </span>Table of Results Means</caption>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 16%" />
+<col style="width: 21%" />
+<col style="width: 17%" />
+<col style="width: 18%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Nivel/Modalidad</th>
+<th style="text-align: right;">mean_espanol</th>
+<th style="text-align: right;">mean_matematicas</th>
+<th style="text-align: right;">mean_sociales</th>
+<th style="text-align: right;">mean_naturales</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">ACADEMICOS</td>
+<td style="text-align: right;">19.902198</td>
+<td style="text-align: right;">16.816484</td>
+<td style="text-align: right;">18.340049</td>
+<td style="text-align: right;">17.725397</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">ADULTOS FORMAL</td>
+<td style="text-align: right;">9.828218</td>
+<td style="text-align: right;">9.661577</td>
+<td style="text-align: right;">9.290876</td>
+<td style="text-align: right;">9.042828</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">ARTES</td>
+<td style="text-align: right;">16.453333</td>
+<td style="text-align: right;">14.667869</td>
+<td style="text-align: right;">15.084307</td>
+<td style="text-align: right;">14.985406</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">MODALIDAD GENERAL</td>
+<td style="text-align: right;">15.855032</td>
+<td style="text-align: right;">15.471510</td>
+<td style="text-align: right;">15.611412</td>
+<td style="text-align: right;">15.590785</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">TECNICO PROFESIONAL</td>
+<td style="text-align: right;">18.298454</td>
+<td style="text-align: right;">17.115917</td>
+<td style="text-align: right;">16.889827</td>
+<td style="text-align: right;">17.007560</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="layout-chunk" data-layout="l-body">
+<p><img src="index_files/figure-html5/unnamed-chunk-3-1.png" width="624" /></p>
+</div>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 <!--radix_placeholder_article_footer-->
 <!--/radix_placeholder_article_footer-->
