@@ -36,34 +36,6 @@ Support for my hypothesis would be evident if schools in metropolitan areas demo
 ## First Data Visualization
 
 ```{r, echo = FALSE}
-library(dplyr)
-library(knitr)
-
-HS_DR_Education <- DR_education %>%
-  filter(!grepl("basica", `Nivel/Modalidad`, ignore.case = TRUE))
-
-HS_DR_Education <- HS_DR_Education %>%
-  mutate(Español = as.numeric(gsub("[^0-9.]", "", Español)),
-         Matemáticas = as.numeric(gsub("[^0-9.]", "", Matemáticas)),
-         Sociales = as.numeric(gsub("[^0-9.]", "", Sociales)),
-         Naturales = as.numeric(gsub("[^0-9.]", "", Naturales)))
-
-HS_DR_Education[is.na(HS_DR_Education)] <- 0
-
-results_means <- HS_DR_Education %>%
-  group_by(`Nivel/Modalidad`) %>%
-  summarize(mean_espanol = mean(Español, na.rm = TRUE),
-            mean_matematicas = mean(Matemáticas, na.rm = TRUE),
-            mean_sociales = mean(Sociales, na.rm = TRUE),
-            mean_naturales = mean(Naturales, na.rm = TRUE))
-results_means <- results_means %>%
-  filter(`Nivel/Modalidad` %in% c("ADULTOS FORMAL", "ARTES", "MODALIDAD GENERAL", "TECNICO PROFESIONAL", "ACADEMICOS"))
-
-kable(results_means, caption = "Table of Results Means")
-
-```
-
-```{r, echo = FALSE}
 library(ggplot2)
 library(dplyr)
 library(tidyr)
@@ -130,3 +102,64 @@ print(p)
 
 ```
 
+## Results from One Analysis
+
+```{r, echo = FALSE}
+library(dplyr)
+library(knitr)
+
+HS_DR_Education <- DR_education %>%
+  filter(!grepl("basica", `Nivel/Modalidad`, ignore.case = TRUE))
+
+HS_DR_Education <- HS_DR_Education %>%
+  mutate(Español = as.numeric(gsub("[^0-9.]", "", Español)),
+         Matemáticas = as.numeric(gsub("[^0-9.]", "", Matemáticas)),
+         Sociales = as.numeric(gsub("[^0-9.]", "", Sociales)),
+         Naturales = as.numeric(gsub("[^0-9.]", "", Naturales)))
+
+HS_DR_Education[is.na(HS_DR_Education)] <- 0
+
+results_means <- HS_DR_Education %>%
+  group_by(`Nivel/Modalidad`) %>%
+  summarize(Spanish = mean(Español, na.rm = TRUE),
+            Math = mean(Matemáticas, na.rm = TRUE),
+            Social_Sciences = mean(Sociales, na.rm = TRUE),
+            Natural_Sciences = mean(Naturales, na.rm = TRUE)) %>%
+  filter(`Nivel/Modalidad` %in% c("ADULTOS FORMAL", "ARTES", "MODALIDAD GENERAL", "TECNICO PROFESIONAL", "ACADEMICOS")) %>%
+  mutate(Schooling_Type = case_when(
+    `Nivel/Modalidad` == "ADULTOS FORMAL" ~ "Adults School",
+    `Nivel/Modalidad` == "ARTES" ~ "Arts",
+    `Nivel/Modalidad` == "MODALIDAD GENERAL" ~ "General Education",
+    `Nivel/Modalidad` == "TECNICO PROFESIONAL" ~ "Technical-Professional",
+    `Nivel/Modalidad` == "ACADEMICOS" ~ "Academic"
+  )) %>%
+  select(Schooling_Type, Spanish, Math, Social_Sciences, Natural_Sciences)
+
+colnames(results_means) <- c("Schooling Type", "Spanish", "Math", "Social Sciences", "Natural Sciences")
+
+kable(results_means, caption = "National Mean Results per Schooling Type")
+
+```
+
+In the context of the national examinations (Pruebas Nacionales), where the results of students are a combination of their performance in the school and the national exam, the mean results per schooling type can provide insights into the potential impact of different educational programs on students' educational outcomes.   
+
+It is important to consider the weight assigned to the school-based assessment (70%) and the national exam (30%). Table 1 contains mean results nationally of thousands of schools with different focuses, such as Academic or Technical-Professional.
+
+Here are some observations:
+
+1. **Academic:**
+   - This category shows high mean scores across all subjects. In the context of the national examinations, students in Academic programs appear likely to have strong academic performance, contributing positively to their overall results.
+
+2. **Adults School:**
+   - The lower mean scores in this category may suggest that students in Adults School programs might face challenges or have different academic expectations compared to traditional academic programs. The national exam results may be influenced by these lower mean scores.
+
+3. **Arts:**
+   - The Arts schooling type demonstrates good performance, especially in subjects like Spanish and Social Sciences. Students in Arts programs may contribute positively to their national exam results, given their relatively high mean scores.
+
+4. **General Education:**
+   - General Education shows balanced mean scores across subjects. Students in this category are likely to have moderate academic performance, contributing to their overall results in the national examinations.
+
+5. **Technical-Professional:**
+   - The Technical-Professional schooling type displays high mean scores, particularly in Spanish. This suggests that students in Technical-Professional programs may significantly impact their national exam results due to their strong academic performance.
+
+These observations emphasize the potential influence of the educational program on students' academic achievements.
