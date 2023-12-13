@@ -7,6 +7,7 @@ output:
     self_contained: false
 ---
 
+
 # Exploring the Correlation Between School Performance in Dominican National Assessments and School Location and Type
 
 ## Introduction
@@ -35,6 +36,19 @@ The research design for this study is cross-sectional, as it analyzes the data c
 
 library(ggplot2)
 library(tidyr)
+library(dplyr)
+library(knitr)
+
+HS_DR_Education <- DR_education %>%
+  filter(!grepl("basica", `Nivel/Modalidad`, ignore.case = TRUE))
+
+HS_DR_Education <- HS_DR_Education %>%
+  mutate(Español = as.numeric(gsub("[^0-9.]", "", Español)),
+         Matemáticas = as.numeric(gsub("[^0-9.]", "", Matemáticas)),
+         Sociales = as.numeric(gsub("[^0-9.]", "", Sociales)),
+         Naturales = as.numeric(gsub("[^0-9.]", "", Naturales)))
+
+HS_DR_Education[is.na(HS_DR_Education)] <- 0
 
 boxplot_data <- HS_DR_Education %>%
   select(Español, Matemáticas, Sociales, Naturales)
@@ -66,17 +80,6 @@ ggplot(boxplot_data_long, aes(x = Subject, y = Mean_Scores)) +
 ```{r, echo = FALSE}
 library(dplyr)
 library(knitr)
-
-HS_DR_Education <- DR_education %>%
-  filter(!grepl("basica", `Nivel/Modalidad`, ignore.case = TRUE))
-
-HS_DR_Education <- HS_DR_Education %>%
-  mutate(Español = as.numeric(gsub("[^0-9.]", "", Español)),
-         Matemáticas = as.numeric(gsub("[^0-9.]", "", Matemáticas)),
-         Sociales = as.numeric(gsub("[^0-9.]", "", Sociales)),
-         Naturales = as.numeric(gsub("[^0-9.]", "", Naturales)))
-
-HS_DR_Education[is.na(HS_DR_Education)] <- 0
 
 results_means <- HS_DR_Education %>%
   group_by(`Nivel/Modalidad`) %>%
