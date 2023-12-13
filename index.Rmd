@@ -1,108 +1,67 @@
 ---
 title: "Gov 50 Final Project"
 author: "Jose Valdez Genao"
-description: "My final project"
+description: "Factors Influencing School Performance in the Dominican Republic"
 output:
   distill::distill_article:
     self_contained: false
 ---
 
+# Exploring the Correlation Between School Performance in Dominican National Assessments and School Location and Type
+
+## Introduction
+
+This project explores  the performance of schools in the Dominican Republic's National Assessments (Pruebas Nacionales). Every year the Ministry of Education conducts these examinations nationwide, which every student is required to take to graduate from High School. These results are useful to better understand how schools are performing in the different subjects (Spanish, Math, Social Sciences, Natural Sciences).
+
+I aim to understand whether school performance relates to students' location and schooling type. My hypothesis is that urban schools score higher than rural counterparts and that different schooling methods might yield varying results. The rationale behind this hypothesis stems from observations of the Dominican education system and its challenges. Firstly, the hypothesis posits that urban students may outperform their rural counterparts due to differing access to educational resources. Urban areas can enjoy better infrastructure, including more access to electricity, internet, or technology. These advantages can significantly impact students' learning experiences and potentially lead to higher academic performance. Secondly, the hypothesis anticipates performance variations across different school types. Variations are always expected, but in this case, this expectation is rooted in the observation that specific school types, such as academic, or arts-focused schools, might encounter distinct challenges and resources. For instance, technical schools might have access to better-trained teachers, whereas arts schools might face limitations in these aspects due to being more experimental. This analysis is essential given the Dominican Republic's education challenges. Internationally, the country ranked in the lowest performance out of 79 participant countries/economies in the international assessment PISA 2018. Nationally, resource disparities and teacher shortages affect rural areas disproportionately. Conversely, educators in urban areas can benefit from better training due to accessibility to better-funded universities. Addressing these disparities can help understand educational disparities within the country. 
 
 
-## Project thoughts
+## Data Section
 
-I am interested in exploring data related to the results of the National Assessments (Pruebas Nacionales) of the Dominican Republic. Every year the Ministry of Education conducts these examinations nationwide, which every student is required to take to graduate from High School. This data is useful to better understand how students are performing in the different subjects (Spanish, Math, Social Sciences, Natural Sciences). Also, exploring this data might tell us how students are performing in the different regions, and the differences in performance between schooling methods (private, public, technical, arts, etc).
-
-## Dataset and Research Question
-
-```{r}
+```{r, echo = FALSE}
 library(readr)
 DR_education <- read_csv('Results_PN_Data.csv')
 ```
-Does school performance in the Dominican national assessments correlate with the location, type of schooling, or funding source?
 
-In this project, I aim to investigate potential performance differences in the Dominican national examinations, based on geographical location, school type (e.g., arts, technical, regular), and public or private funding. I hypothesize that students in the capital and metropolitan areas might achieve higher mean scores compared to students in rural areas. Furthermore, I think that there will be significant differences in mean scores across school types. Finally, I expect that students in private schools may exhibit higher mean scores than students in public schools. This hypothesis is grounded in the context of the Dominican Republic's education system, which has faced numerous challenges. From an international perspective, the country ranked in the lowest performance out of 79 participant countries/economies in the international assessment PISA 2018. From a national perspective, my theory is that several factors may contribute to the internal challenges. One of them are the disparities in access to educational resources, particularly in rural areas. For example, there are observed issues related to connectivity, access to electricity, internet, and technology devices. Students are also affected by inadequate infrastructure, lack of lab facilities, high classroom density, and shortages of teachers, which could affect some specific school types more than others. On the other hand, teachers in the capital and metropolitan areas have more access to training in relatively well-funded universities with more experienced faculty. These disparities likely result in variations in students' learning outcomes, contributing to the country's high inequality.
+The dataset utilized for this project holds national examination results spanning the years 2016 to 2020, collected within the Dominican Republic. The unit of analysis focuses on school-level mean performance, resulting in a dataset with 34,405 observations. The primary data source consists of these national examinations, which serve as the key dependent variables.
 
-Factual research about these challenges can be found on this reports: 
-https://www.thedialogue.org/wp-content/uploads/2013/10/rc_rdom20101.pdf
-https://pdf.usaid.gov/pdf_docs/PA00WNWJ.pdf
+To refine the analysis, one of the independent variable "Regional" was modified to compare school differences within six  selected regions, three urban and three rural provinces. This adjustment was needed due to the absence of a comprehensive national-level map distinguishing urban and rural areas. The selected urban regions for comparison include the National District, Santo Domingo, and Santiago, representing three of the country's most modern and urbanized provinces. Conversely, the chosen rural regions encompass Barahona, San Juan, and Mao, provinces characterized by lower population density and predominantly rural settings. The second independent variable, "Nivel/Modalidad" (level/modality), categorizes each school nationwide into distinct types of schooling, including General, Academic, Professional Technical, or Arts (e.g., School X = Arts).
 
-My sample is in Spanish and includes national examination results from 2016 to 2020. My unit of analysis are the school’s mean results, with 46,283 observations. My first explanatory variable of interest is “Regional” which is measured by assigning every school to 18 different regionals across the country. This variable is coded by assigning each school to a specific region (e.g., School X = 10). Further investigation is needed to classify regions as metropolitan or rural. The second variable, "Nivel/Modalidad" (level/modality), is coded by assigning every school to the type of schooling. These are: General, Academic, Professional Technical, or Arts (e.g., School X = Arts). I plan to code a third variable differentiating between public and private schools, depending on data availability (e.g., School X = Public).
+The outcome variables of interest are the mean scores in four academic subjects: Spanish, Math, Social Sciences, and Natural Sciences. Each academic subject represents a separate outcome variable, resulting in a total of four outcome variables. These variables measure scores on a 30% scale and summarize the mean performance of all students within each school. For example, the mean scores of all students in School X are coded for Spanish (e.g., Spanish = 16.53).
 
-My outcome variables of interest are representing the mean scores in four academic subjects: Español (Spanish), Matemáticas (Math), Sociales (Social Sciences), and Naturales (Natural Sciences). I want to highlight that every academic subject represents a different variable, for a total of four outcome variables. These variables measures scores on a 30% scale, and summarizes the mean scores of all students in a school. For instance, the mean scores of students in School X are coded for Spanish (e.g., Spanish = 16.53).
-
-Support for my hypothesis would be evident if schools in metropolitan areas demonstrate higher mean scores than rural schools. Also, my theory would be supported if there are significant differences across specific school types, or funding source (e.g., Academic or Private), as suggested by my theory. However, my hypothesis would be refuted if the data indicates similar performance across regionals and school types, including no significant difference in performance of public and private schools. Another outcome that would refute my theory is that public schools perform better than private schools. Coding the mean scores (outcome variables) across explanatory variables will allow me to test my hypothesis and draw meaningful conclusions.
-
-## First Data Visualization
+The research design for this study is cross-sectional, as it analyzes the data collected from 2016 to 2020 as a single dataset to explore correlations between the aforementioned variables. 
 
 ```{r, echo = FALSE}
+
 library(ggplot2)
-library(dplyr)
 library(tidyr)
-library(forcats)
-library(tidytext)
 
-# Your data
-data <- tribble(
-  ~Schooling_type, ~Spanish, ~Mathematics, ~Social_Sciences, ~Natural_Sciences,
-  "ACADEMIC", 19.902198, 16.816484, 18.340049, 17.725397,
-  "ADULTS SCHOOL", 9.828218, 9.661577, 9.290876, 9.042828,
-  "ARTS", 16.453333, 14.667868, 15.084307, 14.985406,
-  "GENERAL EDUCATION", 15.855032, 15.471510, 15.611412, 15.590785,
-  "TECHNICAL-PROFESSIONAL", 18.298454, 17.115917, 16.889827, 17.007560
-)
+boxplot_data <- HS_DR_Education %>%
+  select(Español, Matemáticas, Sociales, Naturales)
 
-# Reshape the data
-data_long <- data %>%
-  pivot_longer(cols = -Schooling_type, names_to = "Subject", values_to = "Mean_Score")
+boxplot_data_long <- boxplot_data %>%
+  pivot_longer(cols = everything(), names_to = "Subject", values_to = "Mean_Scores")
 
-# Create a custom color palette
-custom_colors <- c("#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd")
+custom_labels <- c(
+  Español = "Spanish",
+  Matemáticas = "Math",
+  Sociales = "Social Sciences",
+  Naturales = "Natural Sciences")
 
-fill_order <- c("ACADEMIC", "TECHNICAL-PROFESSIONAL", "GENERAL EDUCATION", "ARTS", "ADULTS SCHOOL")
-
-
-# Create a function to customize facet labels
-customize_labels_schooling <- function(value) {
-  value <- as.character(value)
-  custom_labels <- c("ACADEMIC" = "Academic",
-                     "ADULTS SCHOOL" = "Adults School",
-                     "ARTS" = "Arts",
-                     "GENERAL EDUCATION" = "General Education",
-                     "TECHNICAL-PROFESSIONAL" = "Technical-Professional")
-  return(custom_labels[value])
-}
-
-customize_labels_subject <- function(value) {
-  value <- as.character(value)
-  custom_labels <- c("Spanish" = "Spanish",
-                     "Mathematics" = "Math",
-                     "Social_Sciences" = "Social Sciences",
-                     "Natural_Sciences" = "Natural Sciences")
-  return(custom_labels[value])
-}
-
-# Create the plot with customized facet labels and mean score values
-p <- ggplot(data_long, aes(x = reorder_within(Schooling_type, Mean_Score, Subject), y = Mean_Score, fill = Schooling_type, label = sprintf("%.2f", Mean_Score))) +
-  geom_bar(stat = "identity") +
-  geom_text(size = 2, position = position_stack(vjust = 0.5), color = "white") +  # Add Mean_Score as text
+ggplot(boxplot_data_long, aes(x = Subject, y = Mean_Scores)) +
+  geom_boxplot() +
   labs(
-    x = "Schooling Type's Mean Score",
-    y = "Mean Score per Subject",
-    fill = "School Type",
-    title = "Performance Differences per School Type (2016-2020)",
-    caption = "Source: National Examinations, Ministry of Education Dominican Republic"
+    x = "Academic Subject",
+    y = "Mean Scores",
+    title = "National Distribution of Mean Scores in Academic Subjects"
   ) +
-  theme(legend.title = element_text(),
-        axis.text.y = element_blank()) +
-  scale_fill_manual(values = custom_colors, breaks = fill_order) +
-  facet_wrap(~Subject, ncol = 2, scales = "free", labeller = labeller(Schooling_type = customize_labels_schooling, Subject = customize_labels_subject)) +
-  coord_flip()
-print(p)
+  scale_x_discrete(labels = custom_labels)
 
 ```
 
-## Results from One Analysis
+
+## Results Section
+### National Mean Results per Schooling Type
 
 ```{r, echo = FALSE}
 library(dplyr)
@@ -141,25 +100,153 @@ kable(results_means, caption = "National Mean Results per Schooling Type")
 
 ```
 
-In the context of the national examinations (Pruebas Nacionales), where the results of students are a combination of their performance in the school and the national exam, the mean results per schooling type can provide insights into the potential impact of different educational programs on students' educational outcomes.   
 
-It is important to consider the weight assigned to the school-based assessment (70%) and the national exam (30%). Table 1 contains mean results nationally of thousands of schools with different focuses, such as Academic or Technical-Professional.
+```{r, echo = FALSE}
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+library(forcats)
+library(tidytext)
 
-Here are some observations:
+data <- tribble(
+  ~Schooling_type, ~Spanish, ~Mathematics, ~Social_Sciences, ~Natural_Sciences,
+  "ACADEMIC", 19.902198, 16.816484, 18.340049, 17.725397,
+  "ADULTS SCHOOL", 9.828218, 9.661577, 9.290876, 9.042828,
+  "ARTS", 16.453333, 14.667868, 15.084307, 14.985406,
+  "GENERAL EDUCATION", 15.855032, 15.471510, 15.611412, 15.590785,
+  "TECHNICAL-PROFESSIONAL", 18.298454, 17.115917, 16.889827, 17.007560
+)
 
-1. **Academic:**
-   - This category shows high mean scores across all subjects. In the context of the national examinations, students in Academic programs appear likely to have strong academic performance, contributing positively to their overall results.
+data_long <- data %>%
+  pivot_longer(cols = -Schooling_type, names_to = "Subject", values_to = "Mean_Score")
 
-2. **Adults School:**
-   - The lower mean scores in this category may suggest that students in Adults School programs might face challenges or have different academic expectations compared to traditional academic programs. The national exam results may be influenced by these lower mean scores.
+custom_colors <- c("#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd")
 
-3. **Arts:**
-   - The Arts schooling type demonstrates good performance, especially in subjects like Spanish and Social Sciences. Students in Arts programs may contribute positively to their national exam results, given their relatively high mean scores.
+fill_order <- c("ACADEMIC", "TECHNICAL-PROFESSIONAL", "GENERAL EDUCATION", "ARTS", "ADULTS SCHOOL")
 
-4. **General Education:**
-   - General Education shows balanced mean scores across subjects. Students in this category are likely to have moderate academic performance, contributing to their overall results in the national examinations.
 
-5. **Technical-Professional:**
-   - The Technical-Professional schooling type displays high mean scores, particularly in Spanish. This suggests that students in Technical-Professional programs may significantly impact their national exam results due to their strong academic performance.
+customize_labels_schooling <- function(value) {
+  value <- as.character(value)
+  custom_labels <- c("ACADEMIC" = "Academic",
+                     "ADULTS SCHOOL" = "Adults School",
+                     "ARTS" = "Arts",
+                     "GENERAL EDUCATION" = "General Education",
+                     "TECHNICAL-PROFESSIONAL" = "Technical-Professional")
+  return(custom_labels[value])
+}
 
-These observations emphasize the potential influence of the educational program on students' academic achievements.
+customize_labels_subject <- function(value) {
+  value <- as.character(value)
+  custom_labels <- c("Spanish" = "Spanish",
+                     "Mathematics" = "Math",
+                     "Social_Sciences" = "Social Sciences",
+                     "Natural_Sciences" = "Natural Sciences")
+  return(custom_labels[value])
+}
+
+p <- ggplot(data_long, aes(x = reorder_within(Schooling_type, Mean_Score, Subject), y = Mean_Score, fill = Schooling_type, label = sprintf("%.2f", Mean_Score))) +
+  geom_bar(stat = "identity") +
+  geom_text(size = 2, position = position_stack(vjust = 0.5), color = "white") +  # Add Mean_Score as text
+  labs(
+    x = "Schooling Type's Mean Score",
+    y = "Mean Score per Subject",
+    fill = "School Type",
+    title = "Performance Differences per School Type (2016-2020)",
+    caption = "Source: National Examinations, Ministry of Education Dominican Republic"
+  ) +
+  theme(legend.title = element_text(),
+        axis.text.y = element_blank()) +
+  scale_fill_manual(values = custom_colors, breaks = fill_order) +
+  facet_wrap(~Subject, ncol = 2, scales = "free", labeller = labeller(Schooling_type = customize_labels_schooling, Subject = customize_labels_subject)) +
+  coord_flip()
+p
+
+
+```
+
+In the context of national examinations, students' results are a combination of their school-based performance (weighted at 70%) and their national exam scores (weighted at 30%). Analyzing mean results by schooling type reveals expected variations within the educational system. However, identifying these trends is crucial for understanding which schooling types perform significantly better or worse than others. It is particularly important to highlight abnormal variations, as they open the door to explore the factors influencing academic outcomes.
+
+**Academic Programs:** Students in Academic programs consistently achieve the highest mean scores, excelling in all subjects. This suggests a good academic foundation, contributing significantly to their overall national exam success.
+
+**Adults School Programs:** Adults School programs show lower mean scores across subjects, indicating potential challenges or distinct academic expectations for students in these programs, potentially impacting their national exam performance.
+
+**Arts Programs:** Arts programs perform moderately well, especially in Spanish. While not as high as Academic or General Education programs.
+
+**General Education Programs:** General Education programs maintain well balanced mean scores across subjects, reflecting good academic performance.
+
+**Technical-Professional Programs:** Technical-Professional programs exhibit high mean scores, particularly in Spanish. This signifies good academic performance.
+
+These observations underscore the potential influence of educational programs on students' academic achievements and highlight variations that can help in understanding why certain schooling types perform better or worse on average. Identifying these trends is crucial for improving educational outcomes and addressing abnormal variations within the system.
+
+### Correlation of Exam Performance and Location
+
+```{r, echo = FALSE}
+library(dplyr)
+
+observed_regions <- c("01", "02", "09", "10", "15", "08")
+
+region_subset <- HS_DR_Education %>%
+  filter(`Regional` %in% observed_regions)
+
+library(dplyr)
+
+rural <- c("01", "02", "09")
+
+region_subset <- region_subset %>%
+  mutate(Urban_Rural = ifelse(`Regional` %in% rural, 0, 1))
+
+```
+
+```{r, echo = FALSE}
+
+urban_schools <- region_subset %>% filter(Urban_Rural == 1)
+rural_schools <- region_subset %>% filter(Urban_Rural == 0)
+
+t_test_spanish <- t.test(urban_schools$Español, rural_schools$Español)
+t_test_math <- t.test(urban_schools$Matemáticas, rural_schools$Matemáticas)
+t_test_social <- t.test(urban_schools$Sociales, rural_schools$Sociales)
+t_test_natural <- t.test(urban_schools$Naturales, rural_schools$Naturales)
+
+```
+
+```{r, echo = FALSE}
+library(knitr)
+
+t_test_results <- data.frame(
+  Subject = c("Spanish", "Math", "Social Sciences", "Natural Sciences"),
+  t = c(5.1032, 3.3673, 3.5812, 4.0391),
+  df = c(4165.9, 4084.5, 4053.4, 4105.2),
+  p_value = c(3.489e-07, 0.0007661, 0.000346, 5.464e-05),
+  mean_diff = c(15.14413 - 14.42862, 14.60001 - 14.15433, 14.78045 - 14.25706, 14.74569 - 14.19774),
+  lower_ci = c(0.4406269, 0.1861905, 0.2368591, 0.2819803),
+  upper_ci = c(0.9903943, 0.7051646, 0.8099168, 0.8139205)
+)
+
+kable(t_test_results, caption = "T-Test: Exam Performance in Urban versus Rural Schools")
+```
+
+It should be noted that these results are not nationwide, but rather a comparison between selected regions, 3 urban and 3 rural. This subset has a total of 17,969 observations. 
+
+**Spanish:**
+The Two Sample t-test comparing the mean scores in Spanish between urban and rural schools yielded a statistically significant result (t = 5.1032, p-value = 0.0000003). The positive difference in means is approximately 0.716, and the 95 percent confidence interval for this difference ranges from 0.441 to 0.990. This suggests that, on average, students in urban schools have higher mean scores in Spanish compared to students in rural schools.
+
+**Math:**
+The Two Sample t-test comparing the mean scores in Mathematics between urban and rural schools also yielded a statistically significant result (t = 3.3673, p-value = 0.0007661). The positive difference in means is approximately 0.446, and the 95 percent confidence interval for this difference ranges from 0.186 to 0.705. This indicates that, on average, students in urban schools have higher mean scores in Mathematics compared to students in rural schools.
+
+**Social Sciences:**
+For Social Sciences, the Two Sample t-test produced a statistically significant result (t = 3.5812, p-value = 0.000346). The positive difference in means is approximately 0.523, and the 95 percent confidence interval for this difference ranges from 0.237 to 0.810. This implies that, on average, students in urban schools have higher mean scores in Social Sciences compared to students in rural schools.
+
+**Natural Sciences:**
+The Two Sample t-test comparing the mean scores in Natural Sciences also yielded a statistically significant result (t = 4.0391, p-value = 0.0000546). The positive difference in means is approximately 0.548, and the 95 percent confidence interval for this difference ranges from 0.282 to 0.814. This suggests that, on average, students in urban schools have higher mean scores in Natural Sciences compared to students in rural schools.
+
+In summary, for each subject, the statistical analyses show that urban schools have higher mean scores compared to rural schools, and these differences are statistically significant. This may indicate variations in educational resources, teaching methods, or other factors between urban and rural schools that contribute to differences in student performance in these subjects. These findings are important for understanding educational disparities and may inform future research.
+
+## Conclusion
+
+The analysis of national examination results in the Dominican Republic highlights significant variations in mean scores across different schooling types and between urban and rural regions. Nationwide, Academic programs consistently achieve the highest performance, while Adults School programs exhibit lower mean scores. This is true across different academic subjects. The findings support the hypothesis that specific schooling types can influence student outcomes. Similarly, urban schools consistently outperform rural schools in all subjects, indicating potential disparities in educational resources and teaching methods. It is essential to acknowledge that even when the observed differences in mean scores between urban and rural schools may not be radical, they are still noteworthy. These variations, even if not extreme, raise important questions about the factors contributing to educational disparities.
+
+There are several limitations and potential threats to inference in this analysis. Firstly, the scope of the second analysis (correlation) is limited to a subset of regions, which may not be representative of the entire Dominican Republic. This restricts the generalizability of the findings to the entire population. Additionally, the analysis relies on school's mean scores as the primary outcome measure, which may not capture the full complexity of student performance. 
+
+Confounding variables, such as socioeconomic status or teacher quality, were not part of the dataset, but could significantly impact student performance. Future research could consider controlling for these potential confounders to provide a more accurate assessment of the relationships between schooling type, region, and academic outcomes.
+
+If more time and resources were available, the analysis could be improved by conducting a nationwide study to ensure greater representativeness. Additionally, including a more comprehensive set of variables, such as socioeconomic factors and teacher characteristics, would enhance the understanding of the factors influencing student performance. 
